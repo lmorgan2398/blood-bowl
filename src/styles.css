@@ -1,0 +1,27 @@
+body {
+    font-family: sans-serif;
+    padding: 2rem;
+    background: #f9f9f9;
+}
+h2 {
+    margin-top: 2rem;
+}
+section {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    margin-bottom: 2rem;
+}
+input, select, textarea, button {
+    margin: 0.5rem 0;
+    display: block;
+    padding: 0.5rem;
+    width: 90%;
+}
+.flex {
+    display: flex;
+    gap: 1rem;
+}
+.half {
+    width: 48%;
+}
