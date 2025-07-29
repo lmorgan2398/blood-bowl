@@ -1,61 +1,8 @@
-body {
-    font-family: sans-serif;
-    background: #f9f9f9;
-}
-
-h1, 
-h2, 
-h3 {
-    margin: 1rem 0rem;
-    padding: 0;
-    border-bottom: 1px solid black;
-}
-
-h2 {
-    margin-bottom: 1rem;
-    border: none;
-}
-
-section,
-div {
-    background: #fff;
-    padding: 1rem;
-}
-input, select, textarea, button {
-    margin: 0.5rem 0;
-    display: block;
-    padding: 0.5rem;
-    width: 90%;
-}
-.flex {
-    display: flex;
-    gap: 1rem;
-}
-.half {
-    width: 48%;
-}
-
-li {
-    padding: 0.5rem;
-}
-
-.teams-and-bonuses {
-    display: flex;
-}
-
-#teams,
-#bonuses {
-    display: flex;
-    width: 50%;
-    flex-direction: column;
-    padding: 1rem;
+table,
+tr,
+th,
+td {
     border: 1px solid black;
-    margin: 1rem;
-}
-
-#teams select,
-#teams input, 
-#bonuses select,
-#bonuses input {
-    width: 90%;
+    justify-content: start;
+    text-align: start;
 }

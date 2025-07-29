@@ -1,143 +1,140 @@
 import './styles.css';
 
-const leagues = [];
-const teams = [];
-const matches = [];
+let teams = (function(){
+  let teams = [];
 
-const teamForm = document.getElementById('teamForm');
-const teamList = document.getElementById('teamList');
-const teamSelects = document.querySelectorAll('#matchForm select');
+  const getTeams = () => teams;
+  const setTeams = (array) => teams = array;
 
-const bonusTypeSelect = document.getElementById('bonusType');
-const bonusInputsContainer = document.getElementById('bonusInputs');
-const addBonusBtn = document.getElementById('addBonusBtn');
-const bonusList = document.getElementById('bonusList');
-
-// Bonus info
-let bonuses = [];
-
-bonusTypeSelect.addEventListener('change', () => {
-  const selected = bonusTypeSelect.value;
-  bonusInputsContainer.innerHTML = '';
-
-  if (selected === 'casualty' || selected === 'td') {
-    const label = selected === 'casualty' ? 'Casualties Needed:' : 'TDs Needed:';
-
-    bonusInputsContainer.innerHTML = `
-      <label>${label}</label>
-      <input type="number" id="countNeeded" min="1" required />
-
-      <label>Points Awarded:</label>
-      <input type="number" id="pointsAwarded" min="1" required />
-    `;
-  }
-});
-
-addBonusBtn.addEventListener('click', () => {
-  const type = bonusTypeSelect.value;
-  const countNeeded = document.getElementById('countNeeded');
-  const pointsAwarded = document.getElementById('pointsAwarded');
-
-  if (type == '') {
-    alert ('Please select a bonus type.');
-    return;
-  }
-  if (!countNeeded.value| !pointsAwarded.value) {
-    alert('Please fill in both inputs.');
-    return;
-  }
-
-  const bonus = {
-    type,
-    count: parseInt(countNeeded.value),
-    points: parseInt(pointsAwarded.value)
+  const createTeam = (name, race, coach, ticker) => {
+    let id = crypto.randomUUID();
+    return {
+      name, 
+      race, 
+      coach, 
+      ticker,
+      wins: 0,
+      losses: 0,
+      get record() {
+        return `${this.wins}-${this.losses}`
+      },
+      id,
+    }
   };
 
-  bonuses.push(bonus);
-  renderBonusList();
-  resetForm();
-});
+  const addTeam = (team) => teams.push(team);
 
-function renderBonusList() {
-  bonusList.innerHTML = bonuses.map((b, i) => {
-    const label = b.type === 'casualty' ? 'Casualties' : 'Touchdowns';
-    return `<li>+${b.points} points for ${b.count}+ ${label}</li>`;
-  }).join('');
-}
+  const getTeamByTicker = (ticker) => teams.find(team => team.ticker === ticker);
 
-function resetForm() {
-  bonusTypeSelect.value = '';
-  bonusInputsContainer.innerHTML = '';
-}
+  const getTeamByID = (id) => teams.find(team => team.id === id);
 
-const matchForm = document.getElementById('matchForm');
-const matchList = document.getElementById('matchList');
+  const removeTeamByID = (id) => {
+    teams.forEach((team, i) => {
+      if(id === team.id) {
+        teams.splice(i, 1);
+      }
+    })
+  }
 
-teamForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const formData = new FormData(teamForm);
-    const team = Object.fromEntries(formData.entries());
-    teams.push(team);
-    updateTeamList();
-    updateTeamSelects();
-    teamForm.reset();
-});
+  return { getTeams, setTeams, createTeam, addTeam, getTeamByTicker, getTeamByID, removeTeamByID }
+})();
 
-function updateTeamList() {
-    teamList.innerHTML = teams.map(t => `<li>${t.name} (${t.ticker}) - ${t.race}, Coach: ${t.coach}</li>`).join('');
-}
+let team1 = teams.createTeam('Thorium Reavers', 'Chaos Dwarfs', 'Riley', 'TR');
+let team2 = teams.createTeam('Eversong Gliders', 'Elfs', 'Lucas', 'EG');
+let team3 = teams.createTeam('Felsworn Tinkerers', 'Goblins', 'Jakob', 'FT');
 
-function updateTeamSelects() {
-    teamSelects.forEach(select => {
-    select.innerHTML = teams.map(t => `<option value="${t.ticker}">${t.name} (${t.ticker})</option>`).join('');
-    });
-}
+teams.addTeam(team1);
+teams.addTeam(team2);
+teams.addTeam(team3);
 
-bonusForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const formData = new FormData(bonusForm);
-    const bonus = Object.fromEntries(formData.entries());
-    bonus.points = parseInt(bonus.points);
-    bonuses.push(bonus);
-    updateBonusList();
-    bonusForm.reset();
-});
+console.log(teams.getTeams());
 
-function updateBonusList() {
-    bonusList.innerHTML = bonuses.map(b => `<li>${b.condition} = +${b.points} pts</li>`).join('');
-}
+let display = (function(){
+  let teamsTable = document.querySelector('#teams');
+  
+  const displayTeams = (teamsList) => {
+    teamsList.forEach((team) => {
+      let tr = document.createElement('tr');
+      teamsTable.appendChild(tr);
+      let td1 = document.createElement('td');
+      tr.appendChild(td1);
+      td1.textContent = 'placeholder';
+      let td2 = document.createElement('td');
+      tr.appendChild(td2);
+      td2.textContent = team.name;
+      let td3 = document.createElement('td');
+      tr.appendChild(td3);
+      td3.textContent = team.record;
+    })
+  };
 
-matchForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const formData = new FormData(matchForm);
-    const match = Object.fromEntries(formData.entries());
-    match.td1 = parseInt(match.td1);
-    match.td2 = parseInt(match.td2);
-    match.cas1 = parseInt(match.cas1);
-    match.cas2 = parseInt(match.cas2);
-    applyBonuses(match);
-    matches.push(match);
-    renderMatches();
-    matchForm.reset();
-});
+  return { displayTeams }
+})();
 
-function applyBonuses(match) {
-    match.score1 = match.td1;
-    match.score2 = match.td2;
-    bonuses.forEach(b => {
-    if (b.condition.includes('TDs')) {
-        if (match.td1 >= parseInt(b.condition)) match.score1 += b.points;
-        if (match.td2 >= parseInt(b.condition)) match.score2 += b.points;
-    } else if (b.condition.includes('casualties')) {
-        if (match.cas1 >= parseInt(b.condition)) match.score1 += b.points;
-        if (match.cas2 >= parseInt(b.condition)) match.score2 += b.points;
+let matches = (function(){
+  let matches = [];
+
+  const getMatches = () => matches;
+  const setMatches = (array) => matches = array;
+
+  const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homeCasualties, awayCasualties, date) => {
+    let matchID = crypto.randomUUID();
+    let winnerID;
+    let loserID;
+    if(homeTDs > awayTDs) {
+      winnerID = homeTeamID;
+      loserID = awayTeamID;
     }
-    });
-}
+    else if(homeTDs < awayTDs) {
+      winnerID = awayTeamID;
+      loserID = homeTeamID;
+    }
+    return {
+      homeTeamID,
+      awayTeamID,
+      homeTDs,
+      awayTDs,
+      homeCasualties,
+      awayCasualties,
+      date,
+      winnerID,
+      loserID,
+      id: matchID,
+    }
+  };
 
-function renderMatches() {
-    matchList.innerHTML = matches.map(m => {
-    const winner = m.score1 > m.score2 ? m.team1 : (m.score1 < m.score2 ? m.team2 : 'Draw');
-    return `<li>${m.team1} vs ${m.team2}: ${m.score1} - ${m.score2} (${winner})<br /><small>${m.notes}</small></li>`;
-    }).join('');
-}
+  const addMatch = (match) => matches.push(match);
+
+  const removeMatchByID = (id) => {
+    matches.forEach((match, i) => {
+      if(id === match.id) {
+        matches.splice(i, 1);
+      }
+    })
+  };
+
+  const updateRecords = () => {
+    matches.forEach((match) => {
+      let winner = teams.getTeamByTicker(match.winnerID);
+      console.log(winner);
+      winner.wins++;
+      let loser = teams.getTeamByTicker(match.loserID);
+      loser.losses++;
+    });
+  }
+
+  return { getMatches, setMatches, createMatch, addMatch, removeMatchByID, updateRecords };
+})();
+
+let matchTeam1 = 'TR';
+let matchTeam2 = 'EG';
+let match1 = matches.createMatch(matchTeam1, matchTeam2, 3, 2, 1, 2, 'placeholder');
+let match2 = matches.createMatch(matchTeam2, matchTeam1, 1, 2, 1, 1, 'placeholder');
+matches.addMatch(match1);
+matches.addMatch(match2);
+console.log(matches.getMatches());
+
+matches.updateRecords();
+console.log(teams.getTeams());
+
+display.displayTeams(teams.getTeams());
