@@ -2,15 +2,73 @@ import './styles.css';
 
 const leagues = [];
 const teams = [];
-const bonuses = [];
 const matches = [];
 
 const teamForm = document.getElementById('teamForm');
 const teamList = document.getElementById('teamList');
 const teamSelects = document.querySelectorAll('#matchForm select');
 
-const bonusForm = document.getElementById('bonusForm');
+const bonusTypeSelect = document.getElementById('bonusType');
+const bonusInputsContainer = document.getElementById('bonusInputs');
+const addBonusBtn = document.getElementById('addBonusBtn');
 const bonusList = document.getElementById('bonusList');
+
+// Bonus info
+let bonuses = [];
+
+bonusTypeSelect.addEventListener('change', () => {
+  const selected = bonusTypeSelect.value;
+  bonusInputsContainer.innerHTML = '';
+
+  if (selected === 'casualty' || selected === 'td') {
+    const label = selected === 'casualty' ? 'Casualties Needed:' : 'TDs Needed:';
+
+    bonusInputsContainer.innerHTML = `
+      <label>${label}</label>
+      <input type="number" id="countNeeded" min="1" required />
+
+      <label>Points Awarded:</label>
+      <input type="number" id="pointsAwarded" min="1" required />
+    `;
+  }
+});
+
+addBonusBtn.addEventListener('click', () => {
+  const type = bonusTypeSelect.value;
+  const countNeeded = document.getElementById('countNeeded');
+  const pointsAwarded = document.getElementById('pointsAwarded');
+
+  if (type == '') {
+    alert ('Please select a bonus type.');
+    return;
+  }
+  if (!countNeeded.value| !pointsAwarded.value) {
+    alert('Please fill in both inputs.');
+    return;
+  }
+
+  const bonus = {
+    type,
+    count: parseInt(countNeeded.value),
+    points: parseInt(pointsAwarded.value)
+  };
+
+  bonuses.push(bonus);
+  renderBonusList();
+  resetForm();
+});
+
+function renderBonusList() {
+  bonusList.innerHTML = bonuses.map((b, i) => {
+    const label = b.type === 'casualty' ? 'Casualties' : 'Touchdowns';
+    return `<li>+${b.points} points for ${b.count}+ ${label}</li>`;
+  }).join('');
+}
+
+function resetForm() {
+  bonusTypeSelect.value = '';
+  bonusInputsContainer.innerHTML = '';
+}
 
 const matchForm = document.getElementById('matchForm');
 const matchList = document.getElementById('matchList');

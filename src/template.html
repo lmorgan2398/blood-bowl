@@ -6,34 +6,75 @@
     <title>Blood Bowl</title>
 </head>
 <body>
-    <h1>Blood Bowl League Manager</h1>
+  <h1>Blood Bowl League Manager</h1>
 
-  <section id="league"> 
-    <h2>League Information</h2>
-    <section id="teams">
-        <h2>Teams</h2>
-        <form id="teamForm">
-        <input type="text" placeholder="Team Name" name="name" required />
-        <input type="text" placeholder="Race" name="race" required />
-        <input type="text" placeholder="Coach" name="coach" required />
-        <input type="text" placeholder="Ticker (A-Z)" name="ticker" maxlength="1" required />
-        <button type="submit">Add Team</button>
-        </form>
-        <ul id="teamList"></ul>
-    </section>
+  <div id="new-league"> 
+    <h2>New League</h2>
+    <div class="league">
+      <input type="text" placeholder="League Name" name="league-name" required>
+    </div>
+    <div class="teams-and-bonuses">
+      <div id="teams">
+          <h2>Teams</h2>
+          <h3>New Team</h3>
+          <form id="teamForm">
+            <input type="text" placeholder="Team Name" name="name" required />
+            <select name="race" required>
+              <option value="">Select Race</option>
+              <option value="Amazons">Amazons</option>
+              <option value="Chaos">Chaos</option>
+              <option value="Chaos Dwarfs">Chaos Dwarfs</option>
+              <option value="Dwarfs">Dwarfs</option>
+              <option value="Dark Elfs">Dark Elfs</option>
+              <option value="Elfs">Elfs</option>
+              <option value="Goblins">Goblins</option>
+              <option value="Halflings">Halflings</option>
+              <option value="High Elfs">High Elfs</option>
+              <option value="Humans">Humans</option>
+              <option value="Khemri">Khemri</option>
+              <option value="Khorne Daemon">Khorne Daemon</option>
+              <option value="Lizardmen">Lizardmen</option>
+              <option value="Necromantic">Necromantic</option>
+              <option value="Norse">Norse</option>
+              <option value="Nurgle">Nurgle</option>
+              <option value="Ogre">Ogre</option>
+              <option value="Orc">Orc</option>
+              <option value="Skaven">Skaven</option>
+              <option value="Undead">Undead</option>
+              <option value="Underworld">Underworld</option>
+              <option value="Vampire">Vampire</option>
+              <option value="Wood Elf">Wood Elf</option>
+            </select>
 
-    <section id="bonuses">
-        <h2>Bonuses</h2>
-        <form id="bonusForm">
-        <input type="text" placeholder="Condition (e.g. 3+ TDs)" name="condition" required />
-        <input type="number" placeholder="Points" name="points" required />
-        <button type="submit">Add Bonus</button>
-        </form>
-        <ul id="bonusList"></ul>
-    </section>
-  </section>
+            <input type="text" placeholder="Coach" name="coach" required />
+            <input type="text" placeholder="Ticker (A-Z)" name="ticker" minlength="2" maxlength="2" required />
+            <button type="submit">Add Team</button>
+          </form>
+          <h3>Team List:</h3>
+          <ul id="teamList"></ul>
+      </div>
 
-  <section id="matches">
+      <div id="bonuses">
+          <h2>Bonuses</h2>
+          <h3>New Bonus</h3>
+          <label for="bonusType">Bonus Type:</label>
+          <select id="bonusType" name="bonusType" required>
+            <option value="">Select Bonus Type</option>
+            <option value="casualty">Casualty Counter</option>
+            <option value="td">TD Counter</option>
+          </select>
+
+          <div id="bonusInputs"></div>
+
+          <button id="addBonusBtn">Add Bonus</button>
+
+          <h3>Bonuses List:</h3>
+          <ul id="bonusList"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- <section id="matches">
     <h2>Matches</h2>
     <form id="matchForm">
       <div class="flex">
@@ -52,7 +93,7 @@
       <button type="submit">Record Match</button>
     </form>
     <ul id="matchList"></ul>
-  </section>
+  </section> -->
   <script src="./index.js"></script>
 </body>
 </html>
