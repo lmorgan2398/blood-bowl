@@ -9,23 +9,97 @@
   <h1>Blood Bowl League Manager</h1>
   <div class="teams-container">
     <table id="teams">
-      <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Win-Loss</th>
-        <th>League Points</th>
-      </tr>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>W-D-L</th>
+          <th>LP</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <button id="new-team-btn">+ Add Team</button>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
   <div class="matches-container">
     <table id="matches">
-      <tr>
-        <th>Home</th>
-        <th>Final Score</th>
-        <th>Away</th>
-      </tr>
+      <thead>
+        <tr>
+          <th>Home</th>
+          <th>Final Score</th>
+          <th>Away</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <button id="new-match-btn">+ Add Match</button>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
+
+  <dialog id="team-dialog">
+    <form method="dialog" id="team-form">
+      <h3>Add New Team</h3>
+      <label>
+        Name:
+        <input type="text" name="name" id="name-input" required />
+      </label>
+      <label>
+        Race:
+        <select name="race" id="race-input" required>
+          <option value="">-- Select a Race --</option>
+          <option value="Amazons">Amazons</option>
+          <option value="Chaos">Chaos</option>
+          <option value="Chaos Dwarfs">Chaos Dwarfs</option>
+          <option value="Chaos Renegades">Chaos Renegades</option>
+          <option value="Dark Elves">Dark Elves</option>
+          <option value="Dwarfs">Dwarfs</option>
+          <option value="Elven Union">Elven Union</option>
+          <option value="Goblins">Goblins</option>
+          <option value="Halflings">Halflings</option>
+          <option value="High Elves">High Elves</option>
+          <option value="Human">Human</option>
+          <option value="Imperial Nobility">Imperial Nobility</option>
+          <option value="Khorne">Khorne</option>
+          <option value="Lizardmen">Lizardmen</option>
+          <option value="Necromantic Horror">Necromantic Horror</option>
+          <option value="Norse">Norse</option>
+          <option value="Nurgle">Nurgle</option>
+          <option value="Ogres">Ogres</option>
+          <option value="Old World Alliance">Old World Alliance</option>
+          <option value="Orcs">Orcs</option>
+          <option value="Shambling Undead">Shambling Undead</option>
+          <option value="Skaven">Skaven</option>
+          <option value="Snotlings">Snotlings</option>
+          <option value="Underworld Denizens">Underworld Denizens</option>
+          <option value="Vampires">Vampires</option>
+          <option value="Wood Elves">Wood Elves</option>
+        </select>
+      </label>
+      <label>
+        Coach:
+        <input type="text" name="coach" id="coach-input" required />
+      </label>
+      <label>
+        Ticker:
+        <input type="text" name="ticker" id="ticker-input" maxlength="3" readonly />
+      </label>
+      <div class="form-buttons">
+        <button type="submit" id="add-team-btn">Add Team</button>
+        <button type="button" id="cancel-team-btn">Cancel</button>
+      </div>
+    </form>
+  </dialog>
   <script src="./index.js"></script>
 </body>
 </html>

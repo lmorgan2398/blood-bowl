@@ -55,9 +55,16 @@ console.log(teams.getTeams());
 
 // Module to update HTML display
 let display = (function(){
-  let teamsTable = document.querySelector('#teams');
+  let teamsTable = document.querySelector('#teams tbody');
+
   
   const displayTeams = (teamsList) => {
+    // Clear current display
+    while(teamsTable.firstChild){
+      teamsTable.removeChild(teamsTable.firstChild);
+    };
+
+    // Populate display 
     teamsList.forEach((team) => {
       let tr = document.createElement('tr');
       teamsTable.appendChild(tr);
@@ -171,7 +178,7 @@ bonuses.addBonus(bonus1);
 bonuses.addBonus(bonus2);
 bonuses.addBonus(bonus3);
 bonuses.addBonus(bonus4);
-console.log(bonuses.getBonuses);
+console.log(bonuses.getBonuses());
 
 // Module to log matches
 let matches = (function(){
@@ -287,3 +294,27 @@ console.log(teams.getTeams());
 display.displayTeams(teams.getTeams());
 display.displayMatches(matches.getMatches());
 
+// Experimental form info
+const teamDialog = document.getElementById('team-dialog');
+document.getElementById('new-team-btn').onclick = () => teamDialog.showModal();
+document.getElementById('cancel-team-btn').onclick = () => teamDialog.close();
+
+const newTeamNameInput = document.querySelector('#team-form #name-input');
+const newTeamTickerInput = document.querySelector('#team-form #ticker-input');
+
+newTeamNameInput.addEventListener('input', () => {
+  const words = newTeamNameInput.value.trim().split(/\s+/);
+  const initials = words.map(w => w[0]?.toUpperCase() || '').join('');
+  newTeamTickerInput.value = initials.slice(0, 3); // limit to 3 chars
+});
+
+const addTeamBtn = document.querySelector('#add-team-btn');
+const newTeamRaceInput = document.querySelector('#team-form #race-input');
+const newTeamCoachInput = document.querySelector('#team-form #coach-input');
+addTeamBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  let newTeam = teams.createTeam(newTeamNameInput.value, newTeamRaceInput.value, newTeamCoachInput.value, newTeamTickerInput.value);
+  teams.addTeam(newTeam);
+  display.displayTeams(teams.getTeams());
+  teamDialog.close();
+})
