@@ -7,44 +7,46 @@
 </head>
 <body>
   <h1>Blood Bowl League Manager</h1>
-  <div class="teams-container">
-    <table id="teams">
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Name</th>
-          <th>W-D-L</th>
-          <th>LP</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-      <tfoot>
-        <tr>
-          <td colspan="4">
-            <button id="new-team-btn">+ Add Team</button>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-  <div class="matches-container">
-    <table id="matches">
-      <thead>
-        <tr>
-          <th>Home</th>
-          <th>Final Score</th>
-          <th>Away</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-      <tfoot>
-        <tr>
-          <td colspan="3">
-            <button id="new-match-btn">+ Add Match</button>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
+  <div class="tables-container">
+    <div class="teams-container">
+      <table id="teams">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>W-D-L</th>
+            <th>LP</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <button id="new-team-btn">+ Add Team</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="matches-container">
+      <table id="matches">
+        <thead>
+          <tr>
+            <th>Home</th>
+            <th>Final Score</th>
+            <th>Away</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">
+              <button id="new-match-btn">+ Add Match</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   </div>
 
   <dialog id="team-dialog">
@@ -100,6 +102,83 @@
       </div>
     </form>
   </dialog>
+
+  <dialog id="match-dialog">
+  <form method="dialog" id="match-form">
+    <h3>Add New Match</h3>
+
+    <div class="match-form-grid">
+      <!-- Home Team Column -->
+      <fieldset>
+        <legend>Home Team</legend>
+        <select name="homeTeamID" id="home-select" required>
+          <option value="">-- Select Team --</option>
+        </select>
+        <label>
+          TDs:
+          <input type="number" name="homeTDs" min="0" required />
+        </label>
+        <label>
+          Casualties:
+          <input type="number" name="homeCasualties" min="0" required />
+        </label>
+        <label>
+          Passes:
+          <input type="number" name="homePasses" min="0" required />
+        </label>
+        <label>
+          Painted:
+          <input type="checkbox" name="homePainted" />
+        </label>
+        <label>
+          Underdog:
+          <input type="checkbox" name="homeUnderdog" />
+        </label>
+      </fieldset>
+
+      <!-- Away Team Column -->
+      <fieldset>
+        <legend>Away Team</legend>
+        <select name="awayTeamID" id="away-select" required>
+          <option value="">-- Select Team --</option>
+        </select>
+        <label>
+          TDs:
+          <input type="number" name="awayTDs" min="0" required />
+        </label>
+        <label>
+          Casualties:
+          <input type="number" name="awayCasualties" min="0" required />
+        </label>
+        <label>
+          Passes:
+          <input type="number" name="awayPasses" min="0" required />
+        </label>
+        <label>
+          Painted:
+          <input type="checkbox" name="awayPainted" />
+        </label>
+        <label>
+          Underdog:
+          <input type="checkbox" name="awayUnderdog" />
+        </label>
+      </fieldset>
+    </div>
+
+    <!-- Footer -->
+    <div class="match-form-footer">
+      <label>
+        Match Date:
+        <input type="date" name="date" required />
+      </label>
+      <div class="form-buttons">
+        <button type="submit" id="add-match-btn">Add Match</button>
+        <button type="button" id="cancel-match-btn">Cancel</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
   <script src="./index.js"></script>
 </body>
 </html>

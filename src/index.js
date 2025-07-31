@@ -83,9 +83,15 @@ let display = (function(){
     })
   };
 
-  let matchesTable = document.querySelector('#matches');
+  let matchesTable = document.querySelector('#matches tbody');
 
   const displayMatches = (matchesList) => {
+    // Clear match display
+    while(matchesTable.firstChild){
+      matchesTable.removeChild(matchesTable.firstChild);
+    };
+
+    // Populate match table
     matchesList.forEach((match) => {
       const tr = document.createElement('tr');
       matchesTable.appendChild(tr);
@@ -110,8 +116,30 @@ let display = (function(){
     });
   };
 
+  const homeSelect = document.getElementById('home-select');
+  const awaySelect = document.getElementById('away-select');
 
-  return { displayTeams, displayMatches }
+  function populateTeamSelects() {
+    const teamList = teams.getTeams();
+
+    // Clear any previous options except the default
+    homeSelect.innerHTML = '<option value="">-- Select Team --</option>';
+    awaySelect.innerHTML = '<option value="">-- Select Team --</option>';
+
+    teamList.forEach(team => {
+      const option = document.createElement('option');
+      option.value = team.id;
+      option.textContent = `${team.name} (${team.ticker})`;
+
+      // Clone for each dropdown so the option nodes aren't shared
+      homeSelect.appendChild(option.cloneNode(true));
+      awaySelect.appendChild(option.cloneNode(true));
+    });
+  }
+
+
+
+  return { displayTeams, displayMatches, populateTeamSelects }
 })();
 
 // Module to keep track of bonuses
@@ -260,6 +288,14 @@ let matches = (function(){
   };
 
   const updateRecords = () => {
+    // Clear current records before tallying
+    let initialRecords = teams.getTeams();
+    initialRecords.forEach((record) => {
+      record.wins = 0;
+      record.draws = 0;
+      record.losses = 0;
+      record.leaguePoints = 0;
+    });
     matches.forEach((match) => {
       match.teams.forEach((team) => {
         let teamData = teams.getTeamByID(team.id);
@@ -295,6 +331,7 @@ display.displayTeams(teams.getTeams());
 display.displayMatches(matches.getMatches());
 
 // Experimental form info
+// Team stuff
 const teamDialog = document.getElementById('team-dialog');
 document.getElementById('new-team-btn').onclick = () => teamDialog.showModal();
 document.getElementById('cancel-team-btn').onclick = () => teamDialog.close();
@@ -318,3 +355,54 @@ addTeamBtn.addEventListener('click', (e) => {
   display.displayTeams(teams.getTeams());
   teamDialog.close();
 })
+
+// Match stuff
+const matchDialog = document.getElementById('match-dialog');
+document.getElementById('new-match-btn').onclick = () => {
+  display.populateTeamSelects();
+  matchDialog.showModal()
+};
+document.getElementById('cancel-match-btn').onclick = () => matchDialog.close();
+
+// Match query selectors
+// Home team inputs
+const homeTDs = document.querySelector('[name="homeTDs"]');
+const homeCasualties = document.querySelector('[name="homeCasualties"]');
+const homePasses = document.querySelector('[name="homePasses"]');
+const homePainted = document.querySelector('[name="homePainted"]');
+const homeUnderdog = document.querySelector('[name="homeUnderdog"]');
+
+// Away team inputs
+const awayTDs = document.querySelector('[name="awayTDs"]');
+const awayCasualties = document.querySelector('[name="awayCasualties"]');
+const awayPasses = document.querySelector('[name="awayPasses"]');
+const awayPainted = document.querySelector('[name="awayPainted"]');
+const awayUnderdog = document.querySelector('[name="awayUnderdog"]');
+
+// Match date input
+const matchDate = document.querySelector('[name="date"]');
+const addMatchBtn = document.querySelector('#add-match-btn');
+
+const homeSelect = document.querySelector('#home-select');
+const awaySelect = document.querySelector('#away-select');
+addMatchBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const homeID = homeSelect.value;
+  const awayID = awaySelect.value;
+
+  // Validate they're not the same
+  if (homeID === awayID) {
+    alert("A team cannot play against itself.");
+    return;
+  }
+
+
+  // Use homeID and awayID with your createMatch() function
+  let newMatch = matches.createMatch(homeID, awayID, homeTDs.value, awayTDs.value, homePasses.value, awayPasses.value, homeCasualties.value, awayCasualties.value, homePainted.value, awayPainted.value, homeUnderdog.value, awayUnderdog.value, matchDate.value);
+  matches.addMatch(newMatch);
+  display.displayMatches(matches.getMatches());
+  matches.updateRecords();
+  display.displayTeams(teams.getTeams());
+  matchDialog.close();
+});
