@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   storage.loadAll(teams, matches, bonuses);
   matches.updateRecords(teams.getTeams());
   teams.assignRanks();
+  display.clearInputs();
   display.displayTeams(teams.getTeams());
   display.displayMatches(matches.getMatches());
 });
@@ -32,7 +33,10 @@ const teamDialog = document.getElementById('team-dialog');
 const newTeamNameInput = document.querySelector('#team-form #name-input');
 const newTeamTickerInput = document.querySelector('#team-form #ticker-input');
 
-document.getElementById('new-team-btn').onclick = () => teamDialog.showModal();
+document.getElementById('new-team-btn').onclick = () => {
+    display.clearInputs();
+    teamDialog.showModal();
+};
 document.getElementById('cancel-team-btn').onclick = () => teamDialog.close();
 
 newTeamNameInput.addEventListener('input', () => {
@@ -60,6 +64,7 @@ const matchDialog = document.getElementById('match-dialog');
 
 document.getElementById('new-match-btn').onclick = () => {
   display.populateTeamSelects(teams.getTeams());
+  display.clearInputs();
   matchDialog.showModal();
 };
 

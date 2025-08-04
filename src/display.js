@@ -159,6 +159,25 @@ const showMatchDetails = (match, homeTeam, awayTeam) => {
     matchDialog.showModal();
 }
 
+const inputs = document.querySelectorAll('input');
+const numInputs = document.querySelectorAll('input[type="number"]');
+const selects = document.querySelectorAll('select');
+const checks = document.querySelectorAll('input[type="checkbox"]');
+const clearInputs = () => {
+    inputs.forEach((input) => {
+        input.value = ' ';
+    });
+    numInputs.forEach((input) => {
+        input.value = 0;
+    });
+    selects.forEach((select) => {
+        select.selectedIndex = 0;
+    });
+    checks.forEach((check) => {
+        check.checked = false;
+    });
+}
+
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
-export { displayTeams, displayMatches, populateTeamSelects, showTeamDetails, showMatchDetails, selectedTeamID, selectedMatchID }
+export { displayTeams, displayMatches, populateTeamSelects, showTeamDetails, showMatchDetails, selectedTeamID, selectedMatchID, clearInputs }
