@@ -23,6 +23,10 @@ module.exports = {
             {
                 test: /\.html$/i,
                 use: 'html-loader',
+                  options: {
+                    sources: false,
+                    minimize: false,
+                  },
             },
             {
                 test: /\.css$/i,
