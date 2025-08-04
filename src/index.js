@@ -90,6 +90,7 @@ let display = (function(){
     teamsList.forEach((team) => {
       let tr = document.createElement('tr');
       teamsTable.appendChild(tr);
+      tr.dataset.teamId = team.id;
 
       let td1 = document.createElement('td');
       tr.appendChild(td1);
@@ -121,6 +122,7 @@ let display = (function(){
     matchesList.forEach((match) => {
       const tr = document.createElement('tr');
       matchesTable.appendChild(tr);
+      tr.dataset.matchId = match.id; 
 
       const homeTeam = match.teams.find(t => t.isHome);
       const awayTeam = match.teams.find(t => !t.isHome);
@@ -163,9 +165,86 @@ let display = (function(){
     });
   }
 
+  // DOM references
+  const teamDialog = document.getElementById('team-details-dialog');
+  const matchDialog = document.getElementById('match-details-dialog');
+  const teamBody = document.getElementById('team-details-body');
+  const matchBody = document.getElementById('match-details-body');
+
+  let selectedTeamID = null;
+  let selectedMatchID = null;
+
+  // === TEAM DETAILS ===
+  const showTeamDetails = (id) => {
+    const team = teams.getTeamByID(id);
+    if (!team) return;
+
+    selectedTeamID = id;
+
+    teamBody.innerHTML = `
+      <p><strong>Name:</strong> ${team.name}</p>
+      <p><strong>Race:</strong> ${team.race}</p>
+      <p><strong>Coach:</strong> ${team.coach}</p>
+      <p><strong>Ticker:</strong> ${team.ticker}</p>
+      <p><strong>Record:</strong> ${team.wins}-${team.draws}-${team.losses}</p>
+      <p><strong>League Points:</strong> ${team.leaguePoints}</p>
+      <p><strong>Rank:</strong> ${team.rank}</p>
+    `;
+
+    teamDialog.showModal();
+  }
+
+  // === MATCH DETAILS ===
+  const showMatchDetails =(id) => {
+    const match = matches.getMatches().find(m => m.id === id);
+    if (!match) return;
+
+    selectedMatchID = id;
+
+    const [home, away] = match.teams;
+    const homeTeam = teams.getTeamByID(home.id);
+    const awayTeam = teams.getTeamByID(away.id);
+
+    const formatBonuses = (bonuses) => {
+      if (!bonuses || bonuses.length === 0) return '<li>No bonuses earned.</li>';
+      return bonuses.map(b => `<li>${b}</li>`).join('');
+    };
+
+    matchBody.innerHTML = `
+      <div class="match-details-grid">
+        <div class="match-team-block">
+          <h4>${homeTeam?.name || 'Unknown'} <span class="label">Home</span></h4>
+          <p><strong>TDs:</strong> ${home.tds}</p>
+          <p><strong>Casualties:</strong> ${home.casualties}</p>
+          <p><strong>Passes:</strong> ${home.passes}</p>
+          <p><strong>Result:</strong> ${capitalize(home.result)}</p>
+          <p><strong>League Points:</strong> ${home.leaguePoints}</p>
+          <p><strong>Bonuses:</strong></p>
+          <ul>${formatBonuses(home.bonusesApplied)}</ul>
+        </div>
+
+        <div class="match-team-block">
+          <h4>${awayTeam?.name || 'Unknown'} <span class="label">Away</span></h4>
+          <p><strong>TDs:</strong> ${away.tds}</p>
+          <p><strong>Casualties:</strong> ${away.casualties}</p>
+          <p><strong>Passes:</strong> ${away.passes}</p>
+          <p><strong>Result:</strong> ${capitalize(away.result)}</p>
+          <p><strong>League Points:</strong> ${away.leaguePoints}</p>
+          <p><strong>Bonuses:</strong></p>
+          <ul>${formatBonuses(away.bonusesApplied)}</ul>
+        </div>
+      </div>
+
+      <p style="text-align:center; margin-top:1rem;"><strong>Date:</strong> ${match.date}</p>
+    `;
 
 
-  return { displayTeams, displayMatches, populateTeamSelects }
+    matchDialog.showModal();
+  }
+
+  const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+
+  return { displayTeams, displayMatches, populateTeamSelects, showTeamDetails, showMatchDetails }
 })();
 
 // Module to keep track of bonuses
@@ -425,7 +504,7 @@ addMatchBtn.addEventListener('click', (e) => {
   }
 
 
-  // Use homeID and awayID with your createMatch() function
+  // Use homeID and awayID with createMatch() function
   let newMatch = matches.createMatch(homeID, awayID, homeTDs.value, awayTDs.value, homePasses.value, awayPasses.value, homeCasualties.value, awayCasualties.value, homePainted.value, awayPainted.value, homeUnderdog.value, awayUnderdog.value, matchDate.value);
   matches.addMatch(newMatch);
   display.displayMatches(matches.getMatches());
@@ -433,4 +512,40 @@ addMatchBtn.addEventListener('click', (e) => {
   teams.assignRanks();
   display.displayTeams(teams.getTeams());
   matchDialog.close();
+});
+
+// Event listeners for team/match details
+
+let teamsTable = document.querySelector('#teams tbody');
+teamsTable.addEventListener('click', (e) => {
+  const row = e.target.closest('tr');
+  if (row?.dataset.teamId) {
+    display.showTeamDetails(row.dataset.teamId);
+  }
+});
+
+let matchesTable = document.querySelector('#matches tbody');
+matchesTable.addEventListener('click', (e) => {
+  const row = e.target.closest('tr');
+  if (row?.dataset.matchId) {
+    display.showMatchDetails(row.dataset.matchId);
+  }
+});
+
+// === DELETE HANDLERS for team/match details ===
+
+const deleteTeamBtn = document.getElementById('delete-team-btn');
+const deleteMatchBtn = document.getElementById('delete-match-btn');
+
+deleteTeamBtn.addEventListener('click', () => {
+  teams.removeTeamByID(selectedTeamID);
+  teamDialog.close();
+  display.displayTeams(teams.getTeams());
+});
+
+deleteMatchBtn.addEventListener('click', () => {
+  matches.removeMatchByID(selectedMatchID);
+  matchDialog.close();
+  display.displayMatches(matches.getMatches());
+  display.displayTeams(teams.getTeams()); // To update records after deletion
 });

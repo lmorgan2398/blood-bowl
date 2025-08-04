@@ -179,6 +179,35 @@
   </form>
 </dialog>
 
+<!-- Team Details Dialog -->
+<dialog id="team-details-dialog">
+  <div class="dialog-header">
+    <h3 id="team-details-name">Team Details</h3>
+    <button class="close-btn" onclick="document.getElementById('team-details-dialog').close()">×</button>
+
+  </div>
+  <div id="team-details-body">
+    <!-- Populated by JS -->
+  </div>
+  <div class="form-buttons">
+    <button id="delete-team-btn" class="danger">Delete Team</button>
+  </div>
+</dialog>
+
+<!-- Match Details Dialog -->
+<dialog id="match-details-dialog">
+  <div class="dialog-header">
+    <h3 id="match-details-title">Match Details</h3>
+    <button class="close-btn" onclick="document.getElementById('match-details-dialog').close()">×</button>
+  </div>
+  <div id="match-details-body">
+    <!-- Populated by JS -->
+  </div>
+  <div class="form-buttons">
+    <button id="delete-match-btn" class="danger">Delete Match</button>
+  </div>
+</dialog>
+
   <script src="./index.js"></script>
 </body>
 </html>
