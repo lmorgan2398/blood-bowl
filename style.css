@@ -222,6 +222,13 @@ form select:focus {
   margin-top: 1rem;
 }
 
+input,
+select,
+textarea {
+  box-sizing: border-box;
+}
+
+
 /* Autofill override */
 input:-webkit-autofill {
   box-shadow: 0 0 0 1000px #1a1a1a inset;
