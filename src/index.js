@@ -44,21 +44,23 @@ let teams = (function(){
     let orderedTeams = Array.from(teams);
     for (let i = 0; i < orderedTeams.length; i++) {
       let leaguePointsMax = orderedTeams[i].leaguePoints;
-      let leaguePointsMaxIndex = [i];
+      let leaguePointsMaxIndex = i;
       for (let j = i + 1; j < orderedTeams.length; j++) {
         if (orderedTeams[j].leaguePoints > leaguePointsMax) {
           leaguePointsMax = orderedTeams[j].leaguePoints;
           leaguePointsMaxIndex = j;
         }
-        // Swap values
-        let temp = orderedTeams[leaguePointsMaxIndex];
-        orderedTeams[leaguePointsMaxIndex] = orderedTeams[i];
-        orderedTeams[i] = temp;
       }
+      // Swap values
+      let temp = orderedTeams[leaguePointsMaxIndex];
+      orderedTeams[leaguePointsMaxIndex] = orderedTeams[i];
+      orderedTeams[i] = temp;
     }
     orderedTeams.forEach((team, i) => {
       team.rank = i + 1;
     });
+    console.log(orderedTeams);
+    setTeams(orderedTeams);
   }
 
   return { getTeams, setTeams, createTeam, addTeam, getTeamByTicker, getTeamByID, removeTeamByID, assignRanks }
@@ -458,6 +460,7 @@ addTeamBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let newTeam = teams.createTeam(newTeamNameInput.value, newTeamRaceInput.value, newTeamCoachInput.value, newTeamTickerInput.value);
   teams.addTeam(newTeam);
+  storage.saveAll(teams, matches, bonuses);
   display.displayTeams(teams.getTeams());
   teamDialog.close();
 })
@@ -510,6 +513,7 @@ addMatchBtn.addEventListener('click', (e) => {
   display.displayMatches(matches.getMatches());
   matches.updateRecords();
   teams.assignRanks();
+  storage.saveAll(teams, matches, bonuses);
   display.displayTeams(teams.getTeams());
   matchDialog.close();
 });
@@ -548,4 +552,47 @@ deleteMatchBtn.addEventListener('click', () => {
   matchDialog.close();
   display.displayMatches(matches.getMatches());
   display.displayTeams(teams.getTeams()); // To update records after deletion
+});
+
+const storage = (function () {
+  const save = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data));
+  };
+
+  const load = (key) => {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  };
+
+  const saveAll = (teamsModule, matchesModule, bonusesModule) => {
+    save('teams', teamsModule.getTeams());
+    save('matches', matchesModule.getMatches());
+    save('bonuses', bonusesModule.getBonuses());
+  };
+
+  const loadAll = (teamsModule, matchesModule, bonusesModule) => {
+    const savedTeams = load('teams');
+    const savedMatches = load('matches');
+    const savedBonuses = load('bonuses');
+
+    if (savedTeams) teamsModule.setTeams(savedTeams);
+    if (savedMatches) matchesModule.setMatches(savedMatches);
+    if (savedBonuses) bonusesModule.setBonuses(savedBonuses);
+  };
+
+  return { saveAll, loadAll };
+})();
+
+// Load page content and saved data
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Load stored data
+  storage.loadAll(teams, matches, bonuses);
+
+  // Recalculate derived values like ranks or records
+  matches.updateRecords();
+
+  // Display everything
+  display.displayTeams(teams.getTeams());
+  display.displayMatches(matches.getMatches());
 });
