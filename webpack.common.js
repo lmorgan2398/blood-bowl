@@ -22,7 +22,7 @@ module.exports = {
         rules: [
             {
                 test: /\.html$/i,
-                use: 'html-loader',
+                loader: 'html-loader',
                   options: {
                     sources: false,
                     minimize: false,
