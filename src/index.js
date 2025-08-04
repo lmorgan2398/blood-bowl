@@ -18,6 +18,7 @@ let teams = (function(){
       draws: 0,
       losses: 0,
       leaguePoints: 0,
+      rank: 1,
       get record() {
         return `${this.wins}-${this.draws}-${this.losses}`
       },
@@ -39,7 +40,28 @@ let teams = (function(){
     })
   }
 
-  return { getTeams, setTeams, createTeam, addTeam, getTeamByTicker, getTeamByID, removeTeamByID }
+  const assignRanks = () => {
+    let orderedTeams = Array.from(teams);
+    for (let i = 0; i < orderedTeams.length; i++) {
+      let leaguePointsMax = orderedTeams[i].leaguePoints;
+      let leaguePointsMaxIndex = [i];
+      for (let j = i + 1; j < orderedTeams.length; j++) {
+        if (orderedTeams[j].leaguePoints > leaguePointsMax) {
+          leaguePointsMax = orderedTeams[j].leaguePoints;
+          leaguePointsMaxIndex = j;
+        }
+        // Swap values
+        let temp = orderedTeams[leaguePointsMaxIndex];
+        orderedTeams[leaguePointsMaxIndex] = orderedTeams[i];
+        orderedTeams[i] = temp;
+      }
+    }
+    orderedTeams.forEach((team, i) => {
+      team.rank = i + 1;
+    });
+  }
+
+  return { getTeams, setTeams, createTeam, addTeam, getTeamByTicker, getTeamByID, removeTeamByID, assignRanks }
 })();
 
 // Create and add 3 mock teams
@@ -68,15 +90,19 @@ let display = (function(){
     teamsList.forEach((team) => {
       let tr = document.createElement('tr');
       teamsTable.appendChild(tr);
+
       let td1 = document.createElement('td');
       tr.appendChild(td1);
-      td1.textContent = 'placeholder';
+      td1.textContent = team.rank;
+
       let td2 = document.createElement('td');
       tr.appendChild(td2);
       td2.textContent = team.name;
+
       let td3 = document.createElement('td');
       tr.appendChild(td3);
       td3.textContent = team.record;
+
       let td4 = document.createElement('td');
       tr.appendChild(td4);
       td4.textContent = team.leaguePoints;
@@ -323,8 +349,9 @@ matches.addMatch(match1);
 matches.addMatch(match2);
 console.log(matches.getMatches());
 
-// Call function to update teams records by checking match history
+// Call function to update teams records by checking match history and getting ranks
 matches.updateRecords();
+teams.assignRanks();
 console.log(teams.getTeams());
 
 display.displayTeams(teams.getTeams());
@@ -403,6 +430,7 @@ addMatchBtn.addEventListener('click', (e) => {
   matches.addMatch(newMatch);
   display.displayMatches(matches.getMatches());
   matches.updateRecords();
+  teams.assignRanks();
   display.displayTeams(teams.getTeams());
   matchDialog.close();
 });
