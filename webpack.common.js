@@ -21,14 +21,6 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.html$/i,
-                loader: 'html-loader',
-                  options: {
-                    sources: false,
-                    minimize: false,
-                  },
-            },
-            {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
