@@ -223,6 +223,21 @@ form select:focus {
   margin-top: 1rem;
 }
 
+.form-buttons button {
+  font-size: 1rem;
+  background-color: #b22222;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 6px;
+  padding: .25rem .5rem;
+}
+
+.form-buttons button:hover {
+  background-color: #e25822;
+}
+
 input,
 select,
 textarea {
