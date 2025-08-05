@@ -24,13 +24,13 @@ const removeBonusByID = (id) => {
     })
 };
 
-const applyBonuses = (oppTDs, oppCasualties, passes, painted, underdog) => {
+const applyBonuses = (result, oppTDs, oppCasualties, passes, painted, underdog) => {
     let points = 0;
     let appliedBonuses = [];
 
     bonuses.forEach((bonus) => {
         if (bonus.active === false) return;
-        const appliesAuto = (bonus.type == 'opponent TDs' && oppTDs <= bonus.count) || 
+        const appliesAuto = (bonus.type == 'opponent TDs' && oppTDs <= bonus.count && result == 'win') || 
         (bonus.type == 'opponent casualties' && oppCasualties >= bonus.count) ||
         (bonus.type == 'passes' && passes >= bonus.count);
 

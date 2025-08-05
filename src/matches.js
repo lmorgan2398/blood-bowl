@@ -32,8 +32,8 @@ const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homePasses, awayP
         awayBasePoints +=2;
     }
 
-    let homeBonusData = bonuses.applyBonuses(awayTDs, awayCasualties, homePasses, homePainted, homeUnderdog);
-    let awayBonusData = bonuses.applyBonuses(homeTDs, homeCasualties, awayPasses, awayPainted, awayUnderdog);
+    let homeBonusData = bonuses.applyBonuses(homeResult, awayTDs, awayCasualties, homePasses, homePainted, homeUnderdog);
+    let awayBonusData = bonuses.applyBonuses(awayResult, homeTDs, homeCasualties, awayPasses, awayPainted, awayUnderdog);
 
     let homeBonusPoints = homeBonusData.points;
     let awayBonusPoints = awayBonusData.points;
