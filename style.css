@@ -30,23 +30,18 @@ h1 {
 }
 
 /* ===================
-   Table Styling
+   Shared Table Styling
 ==================== */
 table {
   width: 100%;
   max-width: 450px;
   border-collapse: collapse;
-  background-color: #2b2b2b;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(255, 69, 0, 0.25);
 }
 
-thead {
-  background-color: #3b1f0f;
-  color: #f9c645;
-}
-
+/* Shared thead style */
 thead th {
   padding: 1rem;
   font-size: 0.95rem;
@@ -55,14 +50,7 @@ thead th {
   text-align: center;
 }
 
-tbody tr:nth-child(odd) {
-  background-color: #5c2e14;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #402212;
-}
-
+/* Shared tbody cell style */
 tbody td {
   padding: 1rem;
   text-align: center;
@@ -70,6 +58,7 @@ tbody td {
   color: #fff3e0;
 }
 
+/* Shared tfoot styles */
 tfoot td {
   padding: 0;
   background-color: transparent;
@@ -94,6 +83,46 @@ tfoot button:hover {
 }
 
 /* ===================
+   Teams Table Styling
+==================== */
+table#teams {
+  background-color: #2b2b2b;
+}
+
+table#teams thead {
+  background-color: #3b1f0f;
+  color: #f9c645;
+}
+
+table#teams tbody tr:nth-child(odd) {
+  background-color: #5c2e14;
+}
+
+table#teams tbody tr:nth-child(even) {
+  background-color: #402212;
+}
+
+/* ===================
+   Matches Table Styling
+==================== */
+table#matches {
+  background-color: #262020;
+}
+
+table#matches thead {
+  background-color: #471a1a;
+  color: #fcb960;
+}
+
+table#matches tbody tr:nth-child(odd) {
+  background-color: #4b2a2a;
+}
+
+table#matches tbody tr:nth-child(even) {
+  background-color: #351c1c;
+}
+
+/* ===================
    Table Interactivity
 ==================== */
 table#teams tbody tr:hover,
@@ -102,34 +131,6 @@ table#matches tbody tr:hover {
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
   box-shadow: inset 0 0 0 2px #aa4422;
-}
-
-/* ===================
-   Button Styling
-==================== */
-button,
-button.danger {
-  background-color: #b22222;
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease;
-}
-
-button:hover {
-  background-color: #e25822;
-}
-
-button.danger {
-  background-color: #a92b2b;
-}
-
-button.danger:hover {
-  background-color: #ff3e3e;
 }
 
 /* ===================
@@ -306,6 +307,170 @@ fieldset legend {
 .match-team-block li {
   margin-bottom: 0.4rem;
   list-style-type: disc;
+}
+
+/* ===================
+   Bonus Settings Styled to Match Tables
+==================== */
+#bonus-settings {
+  background-color: #2b2b2b;
+  color: #f5f5f5;
+  border-radius: 10px;
+  padding: 1rem;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(255, 69, 0, 0.25);
+  border: 1px solid #3b1f0f;
+}
+
+#bonus-settings h3 {
+  color: #f9c645;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #5c2e14;
+  padding-bottom: 0.3rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#bonus-toggle-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bonus-toggle-label {
+  background-color: #2b2b2b;
+  color: #fff3e0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #3d2b1c;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+/* Row container for checkbox + text */
+.bonus-toggle-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Checkbox style */
+.bonus-toggle-top input[type="checkbox"] {
+  accent-color: #ff6b2d;
+  transform: scale(1.2);
+}
+
+.bonus-toggle-top input[type="checkbox"]:hover {
+  accent-color: #ff6b2d;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* Detail dropdown */
+.bonus-detail {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  background-color: #402212;
+  color: #ffd591;
+  margin-top: 0.5rem;
+  padding: 0;
+  padding-left: 0.75rem;
+  border-left: 4px solid #f9c645;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+
+.bonus-detail.show {
+  max-height: 100px;
+  opacity: 1;
+  padding: 0.5rem 0.75rem;
+}
+
+
+.bonus-toggle-label:hover {
+  background-color: #4a2c1c;
+}
+
+.bonus-toggle-label input[type="checkbox"] {
+  accent-color: #ff6b2d;
+  transform: scale(1.2);
+}
+
+/* Container for each bonus toggle */
+.bonus-toggle-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Hidden by default */
+.bonus-detail {
+  display: none;
+  background-color: #402212;
+  color: #fff3e0;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid #f9c645;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  transition: max-height 0.3s ease;
+}
+
+/* Show when toggled */
+.bonus-detail.show {
+  display: block;
+}
+
+/* === Bonus Toggle Wrapper === */
+.bonus-toggle-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* === Label block that includes the checkbox + text + dropdown === */
+.bonus-toggle-label {
+  background-color: #2b2b2b;
+  color: #fff3e0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #3d2b1c;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  cursor: help;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.bonus-toggle-label:hover {
+  background-color: #3b2416;
+}
+
+/* === Detail Dropdown === */
+.bonus-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+  padding-top: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-top: 0.5rem;
+  color: #ffd591;
+}
+
+/* === Shown Detail === */
+.bonus-detail.show {
+  max-height: 100px;
+  opacity: 1;
+  padding-top: 0.5rem;
 }
 
 /* ===================
