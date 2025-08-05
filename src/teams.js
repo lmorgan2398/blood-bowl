@@ -71,7 +71,6 @@ const assignRanks = () => {
     orderedTeams.forEach((team, i) => {
         team.rank = i + 1;
     });
-    console.log(orderedTeams);
     setTeams(orderedTeams);
 }
 

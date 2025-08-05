@@ -188,3 +188,80 @@ document.getElementById('delete-match-btn').addEventListener('click', () => {
   display.displayTeams(teams.getTeams());
   document.getElementById('match-details-dialog').close();
 });
+
+// === IMPORT/EXPORT SECTION ===
+const jsonInput = document.getElementById('json-input');
+const exportBtn = document.getElementById('export-json');
+const importBtn = document.getElementById('import-json');
+
+exportBtn.addEventListener('click', () => {
+  const exportData = {
+    version: 1,
+    teams: teams.getTeams(),
+    matches: matches.getMatches(),
+    bonuses: bonuses.getBonuses()
+  };
+
+  const json = JSON.stringify(exportData, null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    alert('League data copied to clipboard!');
+  }).catch(err => {
+    alert('Failed to copy JSON to clipboard');
+    console.error(err);
+  });
+});
+
+importBtn.addEventListener('click', async () => {
+  let jsonText = jsonInput.value.trim();
+
+  // If the input is empty, try to get JSON from the clipboard
+  if (!jsonText) {
+    try {
+      jsonText = await navigator.clipboard.readText();
+      if (!jsonText.trim()) return alert('Clipboard is empty or invalid.');
+    } catch (err) {
+      return alert('Could not read from clipboard.');
+    }
+  }
+
+  try {
+    const parsed = JSON.parse(jsonText);
+    console.log(parsed);
+
+    // Ensure correct structure
+    if (
+      !parsed ||
+      !Array.isArray(parsed.teams) ||
+      !Array.isArray(parsed.matches) ||
+      !Array.isArray(parsed.bonuses)
+    ) {
+      return alert('Invalid JSON structure: expected { teams, matches, bonuses }');
+    }
+
+    // Save to modules
+    teams.setTeams(parsed.teams);
+    matches.setMatches(parsed.matches);
+    bonuses.setBonuses(parsed.bonuses);
+
+    // Persist to localStorage
+    storage.save('teams', parsed.teams);
+    storage.save('matches', parsed.matches);
+    storage.save('bonuses', parsed.bonuses);
+
+    console.log('Working here?');
+    // Update state
+    matches.updateRecords(teams.getTeams());
+    teams.assignRanks();
+
+    console.log('Working here?');
+    // Re-render UI
+    display.displayTeams(teams.getTeams());
+    display.displayMatches(matches.getMatches());
+    console.log('Working here?');
+
+    alert('League data successfully imported!');
+  } catch (err) {
+    console.error(err);
+    alert('Error importing data. Please make sure it’s valid JSON.');
+  }
+});
