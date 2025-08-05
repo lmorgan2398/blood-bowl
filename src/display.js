@@ -119,14 +119,52 @@ const showTeamDetails = (team) => {
         <p><strong>Record:</strong> ${team.wins}-${team.draws}-${team.losses}</p>
         <p><strong>League Points:</strong> ${team.leaguePoints}</p>
         <p><strong>Rank:</strong> ${team.rank}</p>
-        <p><strong>Games Played:</strong> ${team.gamesPlayed}</p>
-        <p><strong>Total TDs:</strong> ${team.totalTDs}</p>
-        <p><strong>Total Casualties Caused:</strong> ${team.totalCasualties}</p>
-
     `;
 
+    // ==== Mini Match History ====
+    const teamMatches = matches.getMatches()
+      .filter(match => match.teams.some(t => t.id === team.id))
+      .sort((a, b) => new Date(b.date) - new Date(a.date)); // Newest first
+
+    const matchHistory = document.createElement('div');
+    matchHistory.classList.add('team-match-history');
+
+    const historyHeader = document.createElement('h4');
+    historyHeader.textContent = 'Match History';
+    matchHistory.appendChild(historyHeader);
+
+    teamMatches.forEach(match => {
+        const [home, away] = match.teams;
+        const isHome = home.id === team.id;
+        const self = isHome ? home : away;
+        const opponent = isHome ? away : home;
+
+        const opponentName = teams.getTeamByID(opponent.id)?.name || 'Unknown';
+        const result = self.result;
+        const score = isHome ? `${home.tds}-${away.tds}` : `${away.tds}-${home.tds}`;
+        const date = match.date;
+
+        const row = document.createElement('div');
+        row.classList.add('mini-match-row');
+        row.innerHTML = `
+            <span class="match-date">${date}</span>
+            <span class="opponent-name">${opponentName}</span>
+            <span class="score">${score}</span>
+            <span class="result ${result}">${capitalize(result)}</span>
+        `;
+
+        row.addEventListener('click', () => {
+            showMatchDetails(match, teams.getTeamByID(home.id), teams.getTeamByID(away.id));
+        });
+
+        matchHistory.appendChild(row);
+    });
+
+    teamBody.appendChild(matchHistory);
+
     teamDialog.showModal();
-}
+};
+
 
 // === MATCH DETAILS ===
 const showMatchDetails = (match, homeTeam, awayTeam) => {
