@@ -15,6 +15,9 @@ const createTeam = (name, race, coach, ticker) => {
         losses: 0,
         leaguePoints: 0,
         rank: 1,
+        totalTDs: 0,
+        totalCasualties: 0,
+        gamesPlayed: 0,
         get record() {
             return `${this.wins}-${this.draws}-${this.losses}`
         },

@@ -39,15 +39,17 @@ let matchesTable = document.querySelector('#matches tbody');
 
 const displayMatches = (matchesList) => {
     // Clear match display
-    while(matchesTable.firstChild){
+    while (matchesTable.firstChild) {
         matchesTable.removeChild(matchesTable.firstChild);
-    };
+    }
 
-    // Populate match table
-    matchesList.forEach((match) => {
+    // Populate match table in reverse order (newest first)
+    for (let i = matchesList.length - 1; i >= 0; i--) {
+        const match = matchesList[i];
+
         const tr = document.createElement('tr');
         matchesTable.appendChild(tr);
-        tr.dataset.matchId = match.id; 
+        tr.dataset.matchId = match.id;
 
         const homeTeam = match.teams.find(t => t.isHome);
         const awayTeam = match.teams.find(t => !t.isHome);
@@ -66,8 +68,13 @@ const displayMatches = (matchesList) => {
         const td3 = document.createElement('td');
         td3.textContent = awayTeamName;
         tr.appendChild(td3);
-    });
+
+        const td4 = document.createElement('td');
+        td4.textContent = match.date || 'N/A';
+        tr.appendChild(td4);
+    }
 };
+
 
 const homeSelect = document.getElementById('home-select');
 const awaySelect = document.getElementById('away-select');
@@ -112,6 +119,10 @@ const showTeamDetails = (team) => {
         <p><strong>Record:</strong> ${team.wins}-${team.draws}-${team.losses}</p>
         <p><strong>League Points:</strong> ${team.leaguePoints}</p>
         <p><strong>Rank:</strong> ${team.rank}</p>
+        <p><strong>Games Played:</strong> ${team.gamesPlayed}</p>
+        <p><strong>Total TDs:</strong> ${team.totalTDs}</p>
+        <p><strong>Total Casualties Caused:</strong> ${team.totalCasualties}</p>
+
     `;
 
     teamDialog.showModal();

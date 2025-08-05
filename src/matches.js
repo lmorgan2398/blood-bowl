@@ -98,29 +98,39 @@ const setMatchByID = (id, updatedMatch) => {
 
 const getMatchByID = (id) => matches.find(match => match.id === id);
 
-const updateRecords = (initialRecords) => {
-// Clear current records before tallying
-    initialRecords.forEach((record) => {
-        record.wins = 0;
-        record.draws = 0;
-        record.losses = 0;
-        record.leaguePoints = 0;
+const updateRecords = (teams) => {
+  const matches = getMatches();
+
+  // Reset all team stats
+  teams.forEach(team => {
+    team.wins = 0;
+    team.draws = 0;
+    team.losses = 0;
+    team.leaguePoints = 0;
+    team.totalTDs = 0;
+    team.totalCasualties = 0;
+    team.gamesPlayed = 0;
+  });
+
+  matches.forEach(match => {
+    match.teams.forEach(matchTeam => {
+      const team = teams.find(t => t.id === matchTeam.id);
+      if (!team) return;
+
+      team.leaguePoints += Number(matchTeam.leaguePoints);
+      team.totalTDs += Number(matchTeam.tds);
+      team.totalCasualties += Number(matchTeam.casualties);
+      team.gamesPlayed += 1;
+
+      if (matchTeam.result === 'win') {
+        team.wins += 1;
+      } else if (matchTeam.result === 'draw') {
+        team.draws += 1;
+      } else if (matchTeam.result === 'loss') {
+        team.losses += 1;
+      }
     });
-    matches.forEach((match) => {
-        match.teams.forEach((team) => {
-        let teamData = teams.getTeamByID(team.id);
-        if(!teamData) return;
-        
-        if (team.result === 'win') {
-            teamData.wins++;
-        } else if (team.result === 'loss') {
-            teamData.losses++;
-        } else if (team.result === 'draw') {
-            teamData.draws++;
-        }
-        teamData.leaguePoints += team.leaguePoints;
-        });
-    });
+  });
 };
 
 const reapplyBonusesToAllMatches = () => {
