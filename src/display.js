@@ -1,4 +1,6 @@
 import * as teams from './teams.js';
+import * as storage from './storage.js';
+import * as bonuses from './bonuses.js';
 
 let teamsTable = document.querySelector('#teams tbody');
 
@@ -134,7 +136,7 @@ const showMatchDetails = (match, homeTeam, awayTeam) => {
             <p><strong>TDs:</strong> ${home.tds}</p>
             <p><strong>Casualties:</strong> ${home.casualties}</p>
             <p><strong>Passes:</strong> ${home.passes}</p>
-            <p><strong>Result:</strong> ${capitalize(home.result)}</p>
+            <p><strong>Result:</strong> ${capitalize(home.result)} (+${home.basePoints} points)</p>
             <p><strong>League Points:</strong> ${home.leaguePoints}</p>
             <p><strong>Bonuses:</strong></p>
             <ul>${formatBonuses(home.bonusesApplied)}</ul>
@@ -145,7 +147,7 @@ const showMatchDetails = (match, homeTeam, awayTeam) => {
             <p><strong>TDs:</strong> ${away.tds}</p>
             <p><strong>Casualties:</strong> ${away.casualties}</p>
             <p><strong>Passes:</strong> ${away.passes}</p>
-            <p><strong>Result:</strong> ${capitalize(away.result)}</p>
+            <p><strong>Result:</strong> ${capitalize(away.result)} (+${away.basePoints} points)</p>
             <p><strong>League Points:</strong> ${away.leaguePoints}</p>
             <p><strong>Bonuses:</strong></p>
             <ul>${formatBonuses(away.bonusesApplied)}</ul>
@@ -178,6 +180,63 @@ const clearInputs = () => {
     });
 }
 
+const renderBonusToggles = () => {
+  const container = document.getElementById('bonus-toggle-form');
+  container.innerHTML = ''; // Clear previous
+
+  bonuses.getBonuses().forEach(bonus => {
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('bonus-toggle-label');
+
+    // Top row: checkbox + name
+    const topRow = document.createElement('div');
+    topRow.classList.add('bonus-toggle-top');
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.name = 'bonusToggle';
+    checkbox.value = bonus.id;
+    checkbox.checked = bonus.active ?? true;
+
+    checkbox.addEventListener('change', (e) => {
+      bonus.active = e.target.checked;
+      storage.save('bonuses', bonuses.getBonuses());
+    });
+
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = bonus.name;
+
+    topRow.appendChild(checkbox);
+    topRow.appendChild(nameSpan);
+
+    // Detail dropdown
+    const detail = document.createElement('div');
+    detail.classList.add('bonus-detail');
+    let detailText = '';
+
+    if (['painted', 'underdog'].includes(bonus.type)) {
+        detailText = `${bonus.points} points`;
+    } else {
+        detailText = `${bonus.points} points – ${bonus.count} ${bonus.type}`;
+    }
+
+    detail.textContent = detailText;
+
+
+    // Clicking anywhere on label (except checkbox) toggles dropdown
+    wrapper.addEventListener('click', (e) => {
+      if (e.target !== checkbox) {
+        detail.classList.toggle('show');
+      }
+    });
+
+    wrapper.appendChild(topRow);
+    wrapper.appendChild(detail);
+    container.appendChild(wrapper);
+  });
+};
+
+
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
-export { displayTeams, displayMatches, populateTeamSelects, showTeamDetails, showMatchDetails, selectedTeamID, selectedMatchID, clearInputs }
+export { displayTeams, displayMatches, populateTeamSelects, showTeamDetails, showMatchDetails, selectedTeamID, selectedMatchID, clearInputs, renderBonusToggles }

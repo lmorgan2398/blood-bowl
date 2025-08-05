@@ -51,6 +51,7 @@ const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homePasses, awayP
             casualties: homeCasualties,
             passes: homePasses,
             result: homeResult,
+            basePoints: homeBasePoints,
             leaguePoints: homeLeaguePoints,
             bonusesApplied: homeBonusData.appliedBonuses,
             isHome: true
@@ -61,11 +62,12 @@ const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homePasses, awayP
             casualties: awayCasualties,
             passes: awayPasses,
             result: awayResult,
+            basePoints: awayBasePoints,
             leaguePoints: awayLeaguePoints,
             bonusesApplied: awayBonusData.appliedBonuses,
             isHome: false
         }
-        ]
+        ],
     }
 };
 

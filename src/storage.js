@@ -25,4 +25,4 @@ const loadAll = (teamsModule, matchesModule, bonusesModule) => {
     if (savedBonuses) bonusesModule.setBonuses(savedBonuses);
 };
 
-export { saveAll, loadAll }
+export { save, saveAll, loadAll }

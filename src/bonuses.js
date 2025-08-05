@@ -29,6 +29,7 @@ const applyBonuses = (oppTDs, oppCasualties, passes, painted, underdog) => {
     let appliedBonuses = [];
 
     bonuses.forEach((bonus) => {
+        if (bonus.active === false) return;
         const appliesAuto = (bonus.type == 'opponent TDs' && oppTDs <= bonus.count) || 
         (bonus.type == 'opponent casualties' && oppCasualties >= bonus.count) ||
         (bonus.type == 'passes' && passes >= bonus.count);
@@ -40,6 +41,7 @@ const applyBonuses = (oppTDs, oppCasualties, passes, painted, underdog) => {
             points += bonus.points;
             appliedBonuses.push(`${bonus.name}: +${bonus.points} points for ${bonus.count} ${bonus.type}`);
         } else if (appliesManual) {
+            points += bonus.points;
             appliedBonuses.push(`${bonus.name}: +${bonus.points} points`);
         }
     })

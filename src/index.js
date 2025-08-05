@@ -6,21 +6,25 @@ import * as matches from './matches.js';
 import * as storage from './storage.js';
 
 // === CURRENT LEAGUE BONUSES ===
-let bonus1 = bonuses.createBonus('Fully Painted Team', 'underdog', 1, 1);
+let bonus1 = bonuses.createBonus('Fully Painted Team', 'painted', 1, 1);
 let bonus2 = bonuses.createBonus('Vulgar Display of Power', 'opponent casualties', 3, 3);
 let bonus3 = bonuses.createBonus('Aerial Domination', 'passes', 3, 3);
 let bonus4 = bonuses.createBonus('Clean Sheet', 'opponent TDs', 0, 3);
 let bonus5 = bonuses.createBonus('\"It\'s Not the Size of the Dog...\"', 'underdog', 1, 3);
 
-bonuses.addBonus(bonus1);
-bonuses.addBonus(bonus2);
-bonuses.addBonus(bonus3);
-bonuses.addBonus(bonus4);
-bonuses.addBonus(bonus5);
-
 // === DOMContentLoaded: Load Data & Initial Display ===
 document.addEventListener('DOMContentLoaded', () => {
   storage.loadAll(teams, matches, bonuses);
+
+  if (bonuses.getBonuses().length === 0) {
+    bonuses.addBonus(bonus1);
+    bonuses.addBonus(bonus2);
+    bonuses.addBonus(bonus3);
+    bonuses.addBonus(bonus4);
+    bonuses.addBonus(bonus5);
+  }
+  display.renderBonusToggles();
+
   matches.updateRecords(teams.getTeams());
   teams.assignRanks();
   display.clearInputs();
@@ -81,7 +85,11 @@ document.querySelector('#add-match-btn').addEventListener('click', (e) => {
     return;
   }
 
-  const getInputVal = name => document.querySelector(`[name="${name}"]`).value;
+  const getInputVal = name => {
+    const el = document.querySelector(`[name="${name}"]`);
+    return el.type === 'checkbox' ? el.checked : el.value;
+  };
+
   const newMatch = matches.createMatch(
     homeID, awayID,
     getInputVal('homeTDs'), getInputVal('awayTDs'),
