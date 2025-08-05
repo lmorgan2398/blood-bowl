@@ -1,6 +1,7 @@
 import * as teams from './teams.js';
 import * as storage from './storage.js';
 import * as bonuses from './bonuses.js';
+import * as matches from './matches.js';
 
 let teamsTable = document.querySelector('#teams tbody');
 
@@ -201,6 +202,14 @@ const renderBonusToggles = () => {
     checkbox.addEventListener('change', (e) => {
       bonus.active = e.target.checked;
       storage.save('bonuses', bonuses.getBonuses());
+
+      matches.reapplyBonusesToAllMatches();
+
+      matches.updateRecords(teams.getTeams());
+      teams.assignRanks();
+
+      displayMatches(matches.getMatches());
+      displayTeams(teams.getTeams());
     });
 
     const nameSpan = document.createElement('span');
@@ -212,16 +221,7 @@ const renderBonusToggles = () => {
     // Detail dropdown
     const detail = document.createElement('div');
     detail.classList.add('bonus-detail');
-    let detailText = '';
-
-    if (['painted', 'underdog'].includes(bonus.type)) {
-        detailText = `${bonus.points} points`;
-    } else {
-        detailText = `${bonus.points} points – ${bonus.count} ${bonus.type}`;
-    }
-
-    detail.textContent = detailText;
-
+    detail.textContent = bonus.description;
 
     // Clicking anywhere on label (except checkbox) toggles dropdown
     wrapper.addEventListener('click', (e) => {

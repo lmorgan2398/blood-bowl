@@ -3,11 +3,12 @@ let bonuses = [];
 const getBonuses = () => bonuses;
 const setBonuses = (array) => bonuses = array;
 
-const createBonus = (name, type, count, points) => {
+const createBonus = (name, type, description, count, points) => {
     let bonusID = crypto.randomUUID();
     return {
         name,
         type,
+        description,
         count,
         points,
         id: bonusID,

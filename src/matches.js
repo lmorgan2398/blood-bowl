@@ -1,5 +1,6 @@
 import * as bonuses from './bonuses.js';
 import * as teams from './teams.js';
+import * as storage from './storage.js';
 
 let matches = [];
 
@@ -48,6 +49,8 @@ const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homePasses, awayP
         {
             id: homeTeamID,
             tds: homeTDs,
+            painted: homePainted,
+            underdog: homeUnderdog,
             casualties: homeCasualties,
             passes: homePasses,
             result: homeResult,
@@ -59,6 +62,8 @@ const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homePasses, awayP
         {
             id: awayTeamID,
             tds: awayTDs,
+            painted: awayPainted,
+            underdog: awayUnderdog,
             casualties: awayCasualties,
             passes: awayPasses,
             result: awayResult,
@@ -80,6 +85,16 @@ const removeMatchByID = (id) => {
         }
     });
 };
+
+const setMatchByID = (id, updatedMatch) => {
+  const index = matches.findIndex(m => m.id === id);
+  if (index !== -1) {
+    matches[index] = updatedMatch;
+  } else {
+    console.warn(`setMatchByID: No match found with id ${id}`);
+  }
+};
+
 
 const getMatchByID = (id) => matches.find(match => match.id === id);
 
@@ -108,4 +123,34 @@ const updateRecords = (initialRecords) => {
     });
 };
 
-export { getMatches, setMatches, createMatch, addMatch, removeMatchByID, getMatchByID, updateRecords };
+const reapplyBonusesToAllMatches = () => {
+  const currentMatches = getMatches();
+
+  currentMatches.forEach((match) => {
+    const [home, away] = match.teams;
+
+    const updatedMatch = createMatch(
+      home.id,
+      away.id,
+      home.tds,
+      away.tds,
+      home.passes,
+      away.passes,
+      home.casualties,
+      away.casualties,
+      // Assume these were stored correctly before
+      home.painted,
+      away.painted,
+      home.underdog,
+      away.underdog,
+      match.date
+    );
+
+    // Preserve ID before replacing match data
+    updatedMatch.id = match.id;
+
+    setMatchByID(match.id, updatedMatch);
+  });
+};
+
+export { getMatches, setMatches, createMatch, addMatch, removeMatchByID, getMatchByID, updateRecords, reapplyBonusesToAllMatches };

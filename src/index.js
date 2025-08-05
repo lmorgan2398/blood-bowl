@@ -6,11 +6,46 @@ import * as matches from './matches.js';
 import * as storage from './storage.js';
 
 // === CURRENT LEAGUE BONUSES ===
-let bonus1 = bonuses.createBonus('Fully Painted Team', 'painted', 1, 1);
-let bonus2 = bonuses.createBonus('Vulgar Display of Power', 'opponent casualties', 3, 3);
-let bonus3 = bonuses.createBonus('Aerial Domination', 'passes', 3, 3);
-let bonus4 = bonuses.createBonus('Clean Sheet', 'opponent TDs', 0, 3);
-let bonus5 = bonuses.createBonus('\"It\'s Not the Size of the Dog...\"', 'underdog', 1, 3);
+let bonus1 = bonuses.createBonus(
+  'Fully Painted Team',
+  'painted',
+  '1 point awarded if your team is painted to the 3 color minimum.',
+  1,
+  1
+);
+
+let bonus2 = bonuses.createBonus(
+  'Vulgar Display of Power',
+  'opponent casualties',
+  '3 points (awarded if a team causes at least 3 casualties in a match)',
+  3,
+  3
+);
+
+let bonus3 = bonuses.createBonus(
+  'Aerial Domination',
+  'passes',
+  '3 points (for completing 3 successful passes in a match)',
+  3,
+  3
+);
+
+let bonus4 = bonuses.createBonus(
+  'Clean Sheet',
+  'opponent TDs',
+  '3 points (for holding opponents to zero touchdowns)',
+  0,
+  3
+);
+
+let bonus5 = bonuses.createBonus(
+  "It's Not the Size of the Dog...",
+  'underdog',
+  '3 points (for forcing a tie or win with a team value deficit of 150k or more)',
+  1,
+  3
+);
+
 
 // === DOMContentLoaded: Load Data & Initial Display ===
 document.addEventListener('DOMContentLoaded', () => {
