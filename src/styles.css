@@ -183,10 +183,16 @@ dialog {
   line-height: 1.5;
 }
 
+#team-details-body {
+  display: flex;
+  justify-content: space-between;
+}
+
 .team-match-history {
   list-style: none;
   padding-left: 0;
   margin-top: 0.5rem;
+  text-wrap: nowrap;
 }
 
 .team-match-history li {
@@ -197,12 +203,32 @@ dialog {
 }
 
 .team-match-history {
-  margin-top: 1rem;
-  border-top: 1px solid #444;
-  padding-top: 0.75rem;
+  max-height: 100%;
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.3) transparent;
+}
+
+.team-match-history::-webkit-scrollbar {
+  width: 6px; /* thinner scrollbar */
+}
+
+.team-match-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.team-match-history::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); /* subtle dark scrollbar */
+  border-radius: 10px;
+}
+
+.team-match-history::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .team-match-history h4 {
+  margin: none;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   color: #f9c645;
@@ -232,6 +258,7 @@ dialog {
   flex: 1;
   text-align: center;
   font-size: 0.85rem;
+  padding: .25rem 1rem;
 }
 
 .result.win {

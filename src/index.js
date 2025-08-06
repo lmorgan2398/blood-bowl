@@ -90,11 +90,24 @@ document.querySelector('#add-team-btn').addEventListener('click', (e) => {
   const ticker = newTeamTickerInput.value;
   const race = document.querySelector('#team-form #race-input').value;
   const coach = document.querySelector('#team-form #coach-input').value;
+  const editingTeamID = display.getEditingTeamID();
 
-  const newTeam = teams.createTeam(name, race, coach, ticker);
-  teams.addTeam(newTeam);
+  const newTeam = teams.createTeam(name, race, coach, ticker, editingTeamID || null);
+
+  if (editingTeamID) {
+    teams.setTeamByID(editingTeamID, newTeam);
+    display.setEditingTeamID(null);
+  } else {
+    teams.addTeam(newTeam);
+  }
+
+  document.querySelector('#add-team-btn').textContent = 'Add Team';
+  document.querySelector('#team-form-title').textContent = 'New Team';
+  matches.updateRecords(teams.getTeams());
+  teams.assignRanks();
   storage.saveAll(teams, matches, bonuses);
   display.displayTeams(teams.getTeams());
+  display.clearInputs();
   teamDialog.close();
 });
 
@@ -131,6 +144,8 @@ document.querySelector('#add-match-btn').addEventListener('click', (e) => {
     return el.type === 'checkbox' ? el.checked : el.value;
   };
 
+  const editingMatchID = display.getEditingMatchID();
+
   const newMatch = matches.createMatch(
     homeID, awayID,
     getInputVal('homeTDs'), getInputVal('awayTDs'),
@@ -138,10 +153,9 @@ document.querySelector('#add-match-btn').addEventListener('click', (e) => {
     getInputVal('homeCasualties'), getInputVal('awayCasualties'),
     getInputVal('homePainted'), getInputVal('awayPainted'),
     getInputVal('homeUnderdog'), getInputVal('awayUnderdog'),
-    getInputVal('date')
+    getInputVal('date'),
+    editingMatchID || null
   );
-
-  const editingMatchID = display.getEditingMatchID();
 
   if (editingMatchID) {
     matches.setMatchByID(editingMatchID, newMatch);
@@ -280,3 +294,5 @@ importBtn.addEventListener('click', async () => {
     alert('Error importing data. Please make sure it’s valid JSON.');
   }
 });
+
+

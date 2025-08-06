@@ -3,8 +3,7 @@ let teams = [];
 const getTeams = () => teams;
 const setTeams = (array) => teams = array;
 
-const createTeam = (name, race, coach, ticker) => {
-    let id = crypto.randomUUID();
+const createTeam = (name, race, coach, ticker, id = crypto.randomUUID()) => {
     return {
         name, 
         race, 
@@ -44,6 +43,16 @@ const getTeamByTicker = (ticker) => teams.find(team => team.ticker === ticker);
 
 const getTeamByID = (id) => teams.find(team => team.id === id);
 
+const setTeamByID = (id, updatedTeam) => {
+  const index = teams.findIndex(t => t.id === id);
+  if (index !== -1) {
+    teams[index] = updatedTeam;
+  } else {
+    console.warn(`setTeamByID: No team found with id ${id}`);
+  }
+};
+
+
 const removeTeamByID = (id) => {
     teams.forEach((team, i) => {
         if(id === team.id) {
@@ -74,4 +83,4 @@ const assignRanks = () => {
     setTeams(orderedTeams);
 }
 
-export { getTeams, setTeams, createTeam, rehydrateTeams, addTeam, getTeamByTicker, getTeamByID, removeTeamByID, assignRanks }
+export { getTeams, setTeams, createTeam, rehydrateTeams, addTeam, getTeamByTicker, getTeamByID, setTeamByID, removeTeamByID, assignRanks }

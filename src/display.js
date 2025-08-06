@@ -111,7 +111,13 @@ const showTeamDetails = (team) => {
 
     selectedTeamID = team.id;
 
-    teamBody.innerHTML = `
+    teamBody.innerHTML = '';
+
+    const teamStats = document.createElement('div');
+    teamStats.classList.add('team-stats');
+    teamBody.appendChild(teamStats);
+
+    teamStats.innerHTML = `
         <p><strong>Name:</strong> ${team.name}</p>
         <p><strong>Race:</strong> ${team.race}</p>
         <p><strong>Coach:</strong> ${team.coach}</p>
@@ -119,14 +125,26 @@ const showTeamDetails = (team) => {
         <p><strong>Record:</strong> ${team.wins}-${team.draws}-${team.losses}</p>
         <p><strong>League Points:</strong> ${team.leaguePoints}</p>
         <p><strong>Rank:</strong> ${team.rank}</p>
-        <div class="form-buttons">
-            <button id="edit-team-btn">Edit</button>
-        </div>
+        <p><strong>Total TDs:</strong> ${team.totalTDs}</p>
+        <p><strong>Total Casualties Caused:</strong> ${team.totalCasualties}</p>
+        <p><strong>Total Games Played:</strong> ${team.gamesPlayed}</p>
         `;
 
     document.getElementById('edit-team-btn').addEventListener('click', () => {
-        openEditTeamForm(team);
+        setEditingTeamID(team.id);
+  
+        document.querySelector('[name="name"]').value = team.name;
+        document.querySelector('[name="race"]').value = team.race;
+        document.querySelector('[name="coach"]').value = team.coach;
+        document.querySelector('[name="ticker"]').value = team.ticker;
+
+        document.querySelector('#add-team-btn').textContent = 'Apply Edits';
+        document.querySelector('#team-form-title').textContent = 'Edit Team';
+
+        teamDialog.close();
+        document.getElementById('team-dialog').showModal();
     });
+    
 
     // ==== Mini Match History ====
     const teamMatches = matches.getMatches()

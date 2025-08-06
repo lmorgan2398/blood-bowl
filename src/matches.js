@@ -8,8 +8,8 @@ const getMatches = () => matches;
 
 const setMatches = (array) => matches = array;
 
-const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homePasses, awayPasses, homeCasualties, awayCasualties, homePainted, awayPainted, homeUnderdog, awayUnderdog, date) => {
-    let matchID = crypto.randomUUID();
+const createMatch = (homeTeamID, awayTeamID, homeTDs, awayTDs, homePasses, awayPasses, homeCasualties, awayCasualties, homePainted, awayPainted, homeUnderdog, awayUnderdog, date, existingID = null) => {
+    let matchID = existingID || crypto.randomUUID();
 
     let homeResult = 'draw';
     let awayResult = 'draw';
