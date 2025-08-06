@@ -275,7 +275,7 @@ const selects = document.querySelectorAll('select');
 const checks = document.querySelectorAll('input[type="checkbox"]');
 const clearInputs = () => {
     inputs.forEach((input) => {
-        input.value = ' ';
+        input.value = '';
     });
     numInputs.forEach((input) => {
         input.value = 0;
