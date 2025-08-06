@@ -587,7 +587,6 @@ fieldset legend {
 
 #json-input {
   width: 100%;
-  height: 150px;
   padding: 0.75rem;
   background-color: #3b1f0f;
   color: #fff3e0;
@@ -641,7 +640,7 @@ fieldset legend {
 
 .json-buttons button {
   flex: 1;
-  padding: 0.6rem 1rem;
+  padding: 0.25rem 0.5rem;
   font-size: 0.95rem;
   border: none;
   border-radius: 8px;

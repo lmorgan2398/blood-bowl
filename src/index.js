@@ -104,10 +104,16 @@ const matchDialog = document.getElementById('match-dialog');
 document.getElementById('new-match-btn').onclick = () => {
   display.populateTeamSelects(teams.getTeams());
   display.clearInputs();
+  // Set form to new mode (instead of edit)
+  display.setEditingMatchID(null);
+  display.setMatchFormMode(false);
   matchDialog.showModal();
 };
 
-document.getElementById('cancel-match-btn').onclick = () => matchDialog.close();
+document.getElementById('cancel-match-btn').onclick = () => {
+  display.setEditingMatchID(null);
+  matchDialog.close();
+};
 
 document.querySelector('#add-match-btn').addEventListener('click', (e) => {
   e.preventDefault();
@@ -135,12 +141,21 @@ document.querySelector('#add-match-btn').addEventListener('click', (e) => {
     getInputVal('date')
   );
 
-  matches.addMatch(newMatch);
+  const editingMatchID = display.getEditingMatchID();
+
+  if (editingMatchID) {
+    matches.setMatchByID(editingMatchID, newMatch);
+    display.setEditingMatchID(null);
+  } else {
+    matches.addMatch(newMatch);
+  }
+
   matches.updateRecords(teams.getTeams());
   teams.assignRanks();
   storage.saveAll(teams, matches, bonuses);
   display.displayTeams(teams.getTeams());
   display.displayMatches(matches.getMatches());
+
   matchDialog.close();
 });
 

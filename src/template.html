@@ -56,7 +56,7 @@
     </div>
     <div id="json-panel">
       <h3>League Data</h3>
-      <textarea id="json-input" placeholder="Paste or copy league JSON here..."></textarea>
+      <textarea id="json-input" placeholder="Paste or copy league JSON here..." rows="2"></textarea>
       <div class="json-buttons">
         <button id="export-json">Copy JSON</button>
         <button id="import-json">Import JSON</button>
@@ -121,7 +121,7 @@
 
   <dialog id="match-dialog">
   <form method="dialog" id="match-form">
-    <h3>Add New Match</h3>
+    <h3 id="match-dialog-title">Add New Match</h3>
 
     <div class="match-form-grid">
       <!-- Home Team Column -->
@@ -220,6 +220,7 @@
     <!-- Populated by JS -->
   </div>
   <div class="form-buttons">
+    <button id="edit-match-btn">Edit Match</button>
     <button id="delete-match-btn" class="danger">Delete Match</button>
   </div>
 </dialog>

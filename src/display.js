@@ -119,7 +119,14 @@ const showTeamDetails = (team) => {
         <p><strong>Record:</strong> ${team.wins}-${team.draws}-${team.losses}</p>
         <p><strong>League Points:</strong> ${team.leaguePoints}</p>
         <p><strong>Rank:</strong> ${team.rank}</p>
-    `;
+        <div class="form-buttons">
+            <button id="edit-team-btn">Edit</button>
+        </div>
+        `;
+
+    document.getElementById('edit-team-btn').addEventListener('click', () => {
+        openEditTeamForm(team);
+    });
 
     // ==== Mini Match History ====
     const teamMatches = matches.getMatches()
@@ -181,32 +188,58 @@ const showMatchDetails = (match, homeTeam, awayTeam) => {
 
     matchBody.innerHTML = `
         <div class="match-details-grid">
-        <div class="match-team-block">
-            <h4>${homeTeam?.name || 'Unknown'} <span class="label">Home</span></h4>
-            <p><strong>TDs:</strong> ${home.tds}</p>
-            <p><strong>Casualties:</strong> ${home.casualties}</p>
-            <p><strong>Passes:</strong> ${home.passes}</p>
-            <p><strong>Result:</strong> ${capitalize(home.result)} (+${home.basePoints} points)</p>
-            <p><strong>League Points:</strong> ${home.leaguePoints}</p>
-            <p><strong>Bonuses:</strong></p>
-            <ul>${formatBonuses(home.bonusesApplied)}</ul>
-        </div>
+            <div class="match-team-block">
+                <h4>${homeTeam?.name || 'Unknown'} <span class="label">Home</span></h4>
+                <p><strong>TDs:</strong> ${home.tds}</p>
+                <p><strong>Casualties:</strong> ${home.casualties}</p>
+                <p><strong>Passes:</strong> ${home.passes}</p>
+                <p><strong>Result:</strong> ${capitalize(home.result)} (+${home.basePoints} points)</p>
+                <p><strong>League Points:</strong> ${home.leaguePoints}</p>
+                <p><strong>Bonuses:</strong></p>
+                <ul>${formatBonuses(home.bonusesApplied)}</ul>
+            </div>
 
-        <div class="match-team-block">
-            <h4>${awayTeam?.name || 'Unknown'} <span class="label">Away</span></h4>
-            <p><strong>TDs:</strong> ${away.tds}</p>
-            <p><strong>Casualties:</strong> ${away.casualties}</p>
-            <p><strong>Passes:</strong> ${away.passes}</p>
-            <p><strong>Result:</strong> ${capitalize(away.result)} (+${away.basePoints} points)</p>
-            <p><strong>League Points:</strong> ${away.leaguePoints}</p>
-            <p><strong>Bonuses:</strong></p>
-            <ul>${formatBonuses(away.bonusesApplied)}</ul>
+            <div class="match-team-block">
+                <h4>${awayTeam?.name || 'Unknown'} <span class="label">Away</span></h4>
+                <p><strong>TDs:</strong> ${away.tds}</p>
+                <p><strong>Casualties:</strong> ${away.casualties}</p>
+                <p><strong>Passes:</strong> ${away.passes}</p>
+                <p><strong>Result:</strong> ${capitalize(away.result)} (+${away.basePoints} points)</p>
+                <p><strong>League Points:</strong> ${away.leaguePoints}</p>
+                <p><strong>Bonuses:</strong></p>
+                <ul>${formatBonuses(away.bonusesApplied)}</ul>
+            </div>
         </div>
-        </div>
-
         <p style="text-align:center; margin-top:1rem;"><strong>Date:</strong> ${match.date}</p>
-    `;
+        `;
 
+    document.getElementById('edit-match-btn').addEventListener('click', () => {
+        editingMatchID = match.id;
+        setMatchFormMode(true);
+
+        const home = match.teams.find(t => t.isHome);
+        const away = match.teams.find(t => !t.isHome);
+
+        populateTeamSelects(teams.getTeams());
+
+        // Set form inputs
+        document.querySelector('#home-select').value = home.id;
+        document.querySelector('#away-select').value = away.id;
+        document.querySelector('[name="homeTDs"]').value = home.tds;
+        document.querySelector('[name="awayTDs"]').value = away.tds;
+        document.querySelector('[name="homePasses"]').value = home.passes;
+        document.querySelector('[name="awayPasses"]').value = away.passes;
+        document.querySelector('[name="homeCasualties"]').value = home.casualties;
+        document.querySelector('[name="awayCasualties"]').value = away.casualties;
+        document.querySelector('[name="homePainted"]').checked = home.painted;
+        document.querySelector('[name="awayPainted"]').checked = away.painted;
+        document.querySelector('[name="homeUnderdog"]').checked = home.underdog;
+        document.querySelector('[name="awayUnderdog"]').checked = away.underdog;
+        document.querySelector('[name="date"]').value = match.date;
+
+        matchDialog.close(); // Close details
+        document.getElementById('match-dialog').showModal(); // Open edit form
+    });
 
     matchDialog.showModal();
 }
@@ -285,7 +318,28 @@ const renderBonusToggles = () => {
   });
 };
 
-
 const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
 
-export { displayTeams, displayMatches, populateTeamSelects, showTeamDetails, showMatchDetails, selectedTeamID, selectedMatchID, clearInputs, renderBonusToggles }
+let editingMatchID = null;
+const getEditingMatchID = () => editingMatchID;
+const setEditingMatchID = (id) => editingMatchID = id;
+
+let editingTeamID = null;
+const getEditingTeamID = () => editingTeamID;
+const setEditingTeamID = (id) => editingTeamID = id;
+
+const matchDialogTitle = document.querySelector('#match-dialog-title');
+const matchSubmitButton = document.querySelector('#add-match-btn');
+
+export const setMatchFormMode = (isEditing) => {
+  if (isEditing) {
+    matchDialogTitle.textContent = 'Edit Match';
+    matchSubmitButton.textContent = 'Apply Edits';
+  } else {
+    matchDialogTitle.textContent = 'Add Match';
+    matchSubmitButton.textContent = 'Add Match';
+  }
+};
+
+
+export { displayTeams, displayMatches, populateTeamSelects, showTeamDetails, showMatchDetails, selectedTeamID, selectedMatchID, clearInputs, renderBonusToggles, getEditingMatchID, setEditingMatchID, getEditingTeamID, setEditingTeamID }

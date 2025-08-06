@@ -163,4 +163,4 @@ const reapplyBonusesToAllMatches = () => {
   });
 };
 
-export { getMatches, setMatches, createMatch, addMatch, removeMatchByID, getMatchByID, updateRecords, reapplyBonusesToAllMatches };
+export { getMatches, setMatches, createMatch, addMatch, removeMatchByID, getMatchByID, setMatchByID, updateRecords, reapplyBonusesToAllMatches };
