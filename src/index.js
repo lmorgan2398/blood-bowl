@@ -235,7 +235,7 @@ exportBtn.addEventListener('click', () => {
     bonuses: bonuses.getBonuses()
   };
 
-  const json = JSON.stringify(exportData, null, 2);
+  const json = JSON.stringify(exportData);
   navigator.clipboard.writeText(json).then(() => {
     alert('League data copied to clipboard!');
   }).catch(err => {
