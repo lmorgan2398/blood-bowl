@@ -38,15 +38,16 @@ const displayTeams = (teamsList) => {
 let matchesTable = document.querySelector('#matches tbody');
 
 const displayMatches = (matchesList) => {
+    // Sort matches by date
+    matchesList.sort((a, b) => new Date(b.date) - new Date(a.date)); // Newest first
+
     // Clear match display
     while (matchesTable.firstChild) {
         matchesTable.removeChild(matchesTable.firstChild);
     }
 
-    // Populate match table in reverse order (newest first)
-    for (let i = matchesList.length - 1; i >= 0; i--) {
-        const match = matchesList[i];
-
+    // Populate match table
+    matchesList.forEach((match => {
         const tr = document.createElement('tr');
         matchesTable.appendChild(tr);
         tr.dataset.matchId = match.id;
@@ -72,7 +73,7 @@ const displayMatches = (matchesList) => {
         const td4 = document.createElement('td');
         td4.textContent = match.date || 'N/A';
         tr.appendChild(td4);
-    }
+    }));
 };
 
 
@@ -171,7 +172,7 @@ const showTeamDetails = (team) => {
         const self = isHome ? home : away;
         const opponent = isHome ? away : home;
 
-        const opponentName = teams.getTeamByID(opponent.id)?.name || 'Unknown';
+        const opponentTicker = teams.getTeamByID(opponent.id)?.ticker || '???';
         const result = self.result;
         const score = isHome ? `${home.tds}-${away.tds}` : `${away.tds}-${home.tds}`;
         const date = match.date;
@@ -180,7 +181,7 @@ const showTeamDetails = (team) => {
         row.classList.add('mini-match-row');
         row.innerHTML = `
             <span class="match-date">${date}</span>
-            <span class="opponent-name">${opponentName}</span>
+            <span class="opponent-name">${opponentTicker}</span>
             <span class="score">${score}</span>
             <span class="result ${result}">${capitalize(result)}</span>
         `;

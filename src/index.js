@@ -79,10 +79,11 @@ document.getElementById('new-team-btn').onclick = () => {
 document.getElementById('cancel-team-btn').onclick = () => teamDialog.close();
 
 newTeamNameInput.addEventListener('input', () => {
-  const words = newTeamNameInput.value.trim().split(/\s+/);
+  const words = newTeamNameInput.value.trim().split(/[\s\-_:']+/);
   const initials = words.map(w => w[0]?.toUpperCase() || '').join('');
   newTeamTickerInput.value = initials.slice(0, 3);
 });
+
 
 document.querySelector('#add-team-btn').addEventListener('click', (e) => {
   e.preventDefault();
