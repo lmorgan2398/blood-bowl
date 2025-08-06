@@ -16,7 +16,7 @@ let bonus1 = bonuses.createBonus(
 
 let bonus2 = bonuses.createBonus(
   'Vulgar Display of Power',
-  'opponent casualties',
+  'casualties',
   '3 points (awarded if a team causes at least 3 casualties in a match)',
   3,
   3

@@ -216,7 +216,7 @@ const showMatchDetails = (match, homeTeam, awayTeam) => {
             <div class="match-team-block">
                 <h4>${homeTeam?.name || 'Unknown'} <span class="label">Home</span></h4>
                 <p><strong>TDs:</strong> ${home.tds}</p>
-                <p><strong>Casualties:</strong> ${home.casualties}</p>
+                <p><strong>Casualties Caused:</strong> ${home.casualties}</p>
                 <p><strong>Passes:</strong> ${home.passes}</p>
                 <p><strong>Result:</strong> ${capitalize(home.result)} (+${home.basePoints} points)</p>
                 <p><strong>League Points:</strong> ${home.leaguePoints}</p>
@@ -227,7 +227,7 @@ const showMatchDetails = (match, homeTeam, awayTeam) => {
             <div class="match-team-block">
                 <h4>${awayTeam?.name || 'Unknown'} <span class="label">Away</span></h4>
                 <p><strong>TDs:</strong> ${away.tds}</p>
-                <p><strong>Casualties:</strong> ${away.casualties}</p>
+                <p><strong>Casualties Caused:</strong> ${away.casualties}</p>
                 <p><strong>Passes:</strong> ${away.passes}</p>
                 <p><strong>Result:</strong> ${capitalize(away.result)} (+${away.basePoints} points)</p>
                 <p><strong>League Points:</strong> ${away.leaguePoints}</p>
