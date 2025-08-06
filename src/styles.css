@@ -247,6 +247,7 @@ dialog {
   color: #fff3e0;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  min-width: 300px;
 }
 
 .mini-match-row:hover {

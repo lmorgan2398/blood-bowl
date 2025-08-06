@@ -158,6 +158,13 @@ const showTeamDetails = (team) => {
     historyHeader.textContent = 'Match History';
     matchHistory.appendChild(historyHeader);
 
+    if(teamMatches.length === 0) {
+        const row = document.createElement('div');
+        row.classList.add('mini-match-row');
+        row.innerHTML = `<span class="empty">No Matches Yet</span>`;
+        matchHistory.appendChild(row);
+    }
+
     teamMatches.forEach(match => {
         const [home, away] = match.teams;
         const isHome = home.id === team.id;

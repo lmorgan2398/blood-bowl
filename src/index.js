@@ -92,7 +92,10 @@ document.querySelector('#add-team-btn').addEventListener('click', (e) => {
   const coach = document.querySelector('#team-form #coach-input').value;
   const editingTeamID = display.getEditingTeamID();
 
-  const newTeam = teams.createTeam(name, race, coach, ticker, editingTeamID || null);
+  const newTeam = editingTeamID
+  ? teams.createTeam(name, race, coach, ticker, editingTeamID)
+  : teams.createTeam(name, race, coach, ticker);
+
 
   if (editingTeamID) {
     teams.setTeamByID(editingTeamID, newTeam);
